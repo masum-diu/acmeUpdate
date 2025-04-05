@@ -255,6 +255,26 @@
               class="w-full mt-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
             />
           </div>
+          <div class="flex items-center mb-4">
+            <input
+              type="checkbox"
+              id="applicant-consent"
+              name="services"
+              value="Applicant consent"
+              class="w-4 h-4 text-blue-500 border-gray-300 rounded focus:ring-blue-400"
+            />
+            <label for="applicant-consent" class="ml-2 text-gray-700"
+              >Applicant consent</label
+            >
+          </div>
+          <div class="flex items-center mb-4">
+            <input
+              type="text"
+              name="applicant-consent-hint"
+              placeholder="Enter hint"
+              class="w-full mt-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
+            />
+          </div>
         </div>
 
         <h4 class="text-lg font-semibold mb-3 mt-4">Select a Colour</h4>
@@ -439,7 +459,7 @@
 
           // Store in localStorage
           localStorage.setItem("applicantFormData", JSON.stringify(formData));
-          console.log("Form data saved to localStorage:", formData);
+          // console.log("Form data saved to localStorage:", formData);
           window.location.href = "acme.html";
         });
       });

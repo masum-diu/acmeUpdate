@@ -1511,7 +1511,7 @@
   // Validate the firstName field separately
   const formername = document.getElementById("formername");
   const formernameErrorMessage = document.getElementById("formername-error-message");
-  if (formername.value.trim() === "") {
+  if (formername.value.trim() === "1") {
     isformername = false;
     formername.classList.add("invalid");
     formernameErrorMessage.classList.remove("hidden");
@@ -1557,7 +1557,7 @@
   // Validate the surname field separately
   const surname = document.getElementById("surname");
   const surnameErrorMessage = document.getElementById("surname-error-message");
-  if (surname.value.trim() === "") {
+  if (surname.value.trim() === "1") {
     isSurnameValid = false;
     surname.classList.add("invalid");
     surnameErrorMessage.classList.remove("hidden");
@@ -1568,7 +1568,7 @@
    // Validate the placeofbirth field separately
    const placeofbirth = document.getElementById("placeofbirth");
   const placeofbirthErrorMessage = document.getElementById("placeofbirth-error-message");
-  if (placeofbirth.value.trim() === "") {
+  if (placeofbirth.value.trim() === "1") {
     isPlaceOfBirthValid = false;
     placeofbirth.classList.add("invalid");
     placeofbirthErrorMessage.classList.remove("hidden");
@@ -1675,8 +1675,16 @@ const navDob = document.querySelector("nav p");
 
 navName.textContent = `${formData.surname}, ${formData.firstName}`;
 navDob.textContent = formData.dob;
+const storedData = localStorage.getItem('applicantFormData');
+const formDatas = JSON.parse(storedData);
+if (formDatas.services.selectedServices.length === 1 &&
+formDatas.services.selectedServices.includes("Non-police service checks requiring some data entry included")){
+  goToStep(3);
+}
+else{
+  goToStep(2);  
+}
 
-           goToStep(2);
         }
       });
 
@@ -2333,8 +2341,16 @@ script.onload = function () {
         });
 
         if (isValid) {
-          // Proceed to the next step if all fields are valid
-          goToStep(4);
+          const storedData = localStorage.getItem('applicantFormData');
+const formDatas = JSON.parse(storedData);
+if (formDatas.services.selectedServices.length === 1 &&
+formDatas.services.selectedServices.includes("Non-police service checks requiring some data entry included")){
+  goToStep(2);  
+}
+else{
+  goToStep(4);
+}
+         
         }
       }
 
@@ -2859,7 +2875,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // If "No criminal history to declare" is selected, proceed directly to the next step
     if (noCriminalHistory.checked) {
-      goToStep(3); // Go to step 3 without form submission
+      const storedData = localStorage.getItem('applicantFormData');
+const formDatas = JSON.parse(storedData);
+if (formDatas.services.selectedServices.length === 1 &&
+formDatas.services.selectedServices.includes("Non-police service checks requiring some data entry included")){
+  goToStep(4);  
+}
+else{
+  goToStep(3);
+}
+      // goToStep(3); // Go to step 3 without form submission
       return true; // Prevent form submission here
     }
     goToStep(3);
