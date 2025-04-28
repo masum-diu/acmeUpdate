@@ -418,7 +418,7 @@
         </form>
       </div>
       <div id="step-2" class="step hidden mb-4">
-        <h2 class="text-2xl font-bold my-6">Declaration</h2>
+        <h2 class="text-2xl font-bold my-6" id="dect">Declaration</h2>
         <form id="step-2-form" onsubmit="return validateAndProceed1(event)">
           <div class="mb-4">
             <div>
@@ -541,6 +541,7 @@
             <button
               type="submit"
               class="next-button text-white py-2 px-6 rounded "
+              id="next-1"
             >
               Next
             </button>
@@ -1360,7 +1361,7 @@
         </p>
         <canvas id="signatureCanvas" width="300" height="150"></canvas>
         <div class="flex justify-end mt-2">
-          <button
+          <button id="saves"
   onclick="saveSignature();"
   class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mr-2"
 >
@@ -1368,12 +1369,14 @@
 </button>
 
           <button
+          id="clears"
             onclick="clearCanvas()"
             class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 mr-2"
           >
             Clear
           </button>
           <button
+          id="closes"
             onclick="closemyModal()"
             class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
           >
@@ -1902,10 +1905,12 @@ script.onload = function () {
 
         // Show modal
         modal.classList.remove("hidden");
-
+        const storedData = localStorage.getItem('applicantFormData');
+      const formData = JSON.parse(storedData);
+      const savedLanguage = formData?.preferences?.language || 'en'; 
         // If editing, load the existing data into the form
         if (addressIndex !== null) {
-          modalTitle.textContent = "Edit Residential Address";
+          modalTitle.textContent = !savedLanguage==="fr"?"Edit Residential Address":"Modifier l'adresse résidentielle";
           const address = addresses[addressIndex];
           document.getElementById("country1").value = address.country;
           document.getElementById("street1").value = address.street;
@@ -1920,7 +1925,10 @@ script.onload = function () {
           // Update address when form is submitted
           form.onsubmit = (e) => updateAddress(e, addressIndex);
         } else {
-          modalTitle.textContent = "Add Home Address";
+          const storedData = localStorage.getItem('applicantFormData');
+      const formData = JSON.parse(storedData);
+      const savedLanguage = formData?.preferences?.language || 'en'; 
+          modalTitle.textContent = !savedLanguage==='fr'?"Add Home Address":"Ajouter l'adresse du domicile";
           form.onsubmit = (e) => addAddress(e);
         }
         
@@ -2976,6 +2984,124 @@ else{
 function applyLanguage(lang) {
   const translations = {
     fr: {
+      modalTitle: "Autorisation et Décharge",
+    modalText: `
+      J'ai engagé Investigative Solutions Network Inc. (le fournisseur de services)
+      pour effectuer les enquêtes liées à ma demande de services de vérification d'antécédents. <br />
+      Les informations recueillies sur moi seront strictement confidentielles et seront
+      obtenues pour et divulguées uniquement à moi ou, uniquement avec mon consentement
+      exprès ou tel que requis ou permis par la loi.
+    `,
+    saveButton: "Enregistrer",
+    clearButton: "Effacer",
+    closeButton: "Fermer",
+       // ... existing translations ...
+    // Step 5 Translations
+    step5Title: "Confirmation",
+    step5Message: `
+      Vous avez maintenant complété les formulaires pour votre demande de vérification d'antécédents,
+      et aucune modification ne sera permise à vos données personnelles à partir de ce point.
+      <br />
+      Veuillez confirmer que vous souhaitez continuer, ou cliquez sur "Retour" si vous souhaitez
+      apporter des modifications à vos informations personnelles.
+    `,
+    proceedButton: "Procéder au traitement de la demande",
+
+    // Step 6 Translations
+    step6Title: "Vérification manuelle d'identité",
+    step6Message: `
+      Un courriel a été envoyé pour demander la vérification de votre identité. Il
+      a été envoyé à <br />
+      Canadian Bank Note Company <br />
+      À l'attention de : Emilie Capowski, Autorité contractuelle <br />Téléphone :
+      613.722-3422 poste 6097 <br />Courriel : CBNhome@certec.ca <br />Nous leur avons
+      demandé de nous aider à vérifier votre identité. S'ils ne disposent pas déjà de
+      copies de deux pièces d'identité, ils vous contacteront pour vous les demander.
+    `,
+    // startAgainButton: "Recommencer" // Uncomment if needed
+       // ... existing translations Step 4...
+    step4Title: "Décharge et Reconnaissance",
+    reasonSection: "RAISON de la vérification des antécédents",
+    reasonLabel: "Raison de votre demande",
+    reasonPlaceholder: "Raison de votre demande",
+    authorizationSection: "AUTORISATION ET DÉCHARGE pour fournir les informations obtenues lors d'une vérification des antécédents",
+    certificationText: "Je certifie que les informations fournies par moi dans cette demande sont vraies et exactes à la meilleure de ma connaissance.",
+    clickToSign: "Cliquez pour signer la décharge",
+    signatureError: "Veuillez signer la décharge avant de continuer.",
+    agreedByLabel: "Accepté par :",
+    agreedByPlaceholder: "Accepté par",
+    agreedAtLabel: "Accepté à :",
+    agreedAtPlaceholder: "Accepté à",
+       // ... existing translations for Step 3...
+    step3Title: "Veuillez entrer vos détails pour les services suivants",
+    step3Subtitle: "Cliquez sur le bouton MODIFIER pour fournir des informations spécifiques à ce service",
+    creditCheck: "Vérification de crédit à la consommation - Rapport du bureau de crédit",
+    educationVerification: "Vérification d'éducation/d'habilitation (Université de Dhaka)",
+    employmentVerification: "Emploi - Vérification (Certes Solutions Inc)",
+    employmentReference: "Emploi - Référence (Ed Escubedo)",
+    sinLabel: "Numéro d'assurance sociale :",
+    sinPlaceholder: "Numéro d'assurance sociale",
+    // Add all other field labels and placeholders for Step 3
+    institutionTypeLabel: "Type d'institution :",
+    educationInstitutionLabel: "Institution d'éducation :",
+    locationLabel: "Localisation :",
+    telephoneLabel: "Numéro de téléphone :",
+    studentNumberLabel: "Numéro d'étudiant :",
+    credentialLabel: "Habilitation(s) :",
+    credentialStatusLabel: "Statut de l'habilitation :",
+    fromLabel: "De :",
+    toLabel: "À :",
+    referenceWarning1: "Veuillez fournir des informations précises, en particulier pour le nom de la référence, l'adresse e-mail et le numéro de téléphone. Des informations incorrectes peuvent entraîner des retards importants.",
+    referenceWarning2: "La référence doit être un ancien ou actuel superviseur/manager direct. Un membre de la famille, un collègue ou un ami n'est pas une référence appropriée.",
+    countryLabel: "Pays :",
+    streetNameLabel: "Nom de la rue :",
+    apartmentLabel: "Appartement :",
+    cityLabel: "Ville :",
+    provinceLabel: "Province :",
+    postalLabel: "Code postal :",
+    streetNumberLabel: "Numéro de rue :",
+      // declarttion
+      declarationTitle: "Déclaration",
+    noCriminalHistory: "Aucun casier judiciaire à déclarer",
+    declareCriminalHistory: "Déclarer un casier judiciaire",
+    declarationInfo: `
+      Les services de vérification des antécédents policiers signaleront des informations
+      sur les antécédents criminels. Si vous avez un casier judiciaire, vous devez
+      le déclarer afin que la vérification policière puisse confirmer vos informations.
+      Dans ce cas, veuillez sélectionner <span class="font-medium">"Déclarer un casier judiciaire"</span> ci-dessus.
+      <br />
+      D'autre part, si vous n'avez pas de casier judiciaire, veuillez
+      sélectionner <span class="font-medium">"Aucun casier judiciaire à déclarer"</span>
+      ci-dessus, puis cliquez sur <span class="font-medium">"Suivant"</span>.
+    `,
+    criminalRecordTitle: "Déclaration de casier judiciaire",
+    criminalRecordInfo: `
+      Les informations sont collectées et divulguées conformément aux lois fédérales,
+      provinciales et municipales.
+      <br /><br />
+      Une déclaration de casier judiciaire ne constitue pas un casier judiciaire
+      certifié par la GRC et peut ne pas contenir toutes les condamnations criminelles.
+      <br /><br />
+      <strong>NE DÉCLAREZ PAS LES ÉLÉMENTS SUIVANTS :</strong><br />
+      - Les absolutions inconditionnelles ou conditionnelles, conformément au
+      Code criminel, article 730.<br />
+      - Toutes les accusations pour lesquelles vous avez reçu une suspension du casier
+      judiciaire (pardon), conformément à la Loi sur le casier judiciaire.<br />
+      - Toutes les infractions commises lorsque vous étiez un « jeune » (douze ans
+      mais moins de dix-huit ans), conformément à la Loi sur le système de justice
+      pénale pour les adolescents.<br />
+      - Toutes les accusations pour lesquelles vous n'avez pas été condamné, par exemple,
+      les accusations qui ont été retirées, rejetées, ont fait l'objet d'un arrêt des
+      procédures, etc.<br />
+      - Toutes les infractions provinciales ou municipales.<br />
+      - Toutes les accusations traitées à l'extérieur du Canada.
+    `,
+    offencePlaceholder: "Infraction",
+    courtLocationPlaceholder: "Emplacement du tribunal",
+    deleteButton: "Supprimer",
+    addRowButton: "Ajouter une ligne",
+    backButton: "Retour",
+    nextButton: "Suivant",
       // Error Messages
       generalError: "Veuillez corriger les champs surlignés en erreur.",
       telephoneError: "* Le téléphone doit contenir 10 chiffres.",
@@ -3058,6 +3184,158 @@ function applyLanguage(lang) {
   }
   if (lang === 'fr') {
     const t = translations.fr;
+    document.getElementById('saves').textContent = t.saveButton;
+    document.getElementById('clears').textContent = t.clearButton;
+    document.getElementById('closes').textContent = t.closeButton;
+    document.getElementById('myModal').querySelector('h2').textContent = t.modalTitle;
+    document.getElementById('myModal').querySelector('p').innerHTML = t.modalText;
+    const step5 = document.getElementById('step-5');
+  if (step5) {
+    step5.querySelector('h2').textContent = t.step5Title;
+    step5.querySelector('p').innerHTML = t.step5Message;
+    const proceedButton = step5.querySelector('button[onclick="goToStep(6)"]');
+    if (proceedButton) proceedButton.textContent = t.proceedButton;
+  }
+
+  // Step 6 Translations
+  const step6 = document.getElementById('step-6');
+  if (step6) {
+    step6.querySelector('h2').textContent = t.step6Title;
+    step6.querySelector('p').innerHTML = t.step6Message;
+    // Uncomment if you have the Start Again button
+    // const startAgainButton = step6.querySelector('button[onclick="goToStep(1)"]');
+    // if (startAgainButton) startAgainButton.textContent = t.startAgainButton;
+  }
+     // Apply translations to common elements
+  const step4Form = document.getElementById('step-4-form');
+  if (step4Form) {
+    // Update title
+    document.querySelector('#step-4 h2').textContent = t.step4Title;
+    
+    // Update section headers
+    const headers = step4Form.querySelectorAll('h6');
+    headers[0].textContent = t.reasonSection;
+    headers[1].textContent = t.authorizationSection;
+    
+    // Reason for request
+    const reasonLabel = step4Form.querySelector('label[for="middleName"]');
+    if (reasonLabel) reasonLabel.textContent = t.reasonLabel;
+    const reasonInput = step4Form.querySelector('#middleName');
+    if (reasonInput) reasonInput.placeholder = t.reasonPlaceholder;
+    
+    // Certification checkbox
+    const certificationLabel = step4Form.querySelector('label[for="option1"]');
+    if (certificationLabel) certificationLabel.textContent = t.certificationText;
+    
+    // Signature elements
+    const clickToSign = step4Form.querySelector('div[onclick="openmyModal()"] a');
+    if (clickToSign) clickToSign.textContent = t.clickToSign;
+    
+    const signatureError = step4Form.querySelector('#signatureError');
+    if (signatureError) signatureError.textContent = t.signatureError;
+    
+    // Agreed by/at fields
+    const agreedByLabel = step4Form.querySelector('label[for="agreedby"]');
+    if (agreedByLabel) agreedByLabel.textContent = t.agreedByLabel;
+    const agreedByInput = step4Form.querySelector('#agreedby');
+    if (agreedByInput) agreedByInput.placeholder = t.agreedByPlaceholder;
+    
+    const agreedAtLabel = step4Form.querySelector('label[for="agreedat"]');
+    if (agreedAtLabel) agreedAtLabel.textContent = t.agreedAtLabel;
+    const agreedAtInput = step4Form.querySelector('#agreedat');
+    if (agreedAtInput) agreedAtInput.placeholder = t.agreedAtPlaceholder;
+  }
+  
+ 
+    const step3Form = document.getElementById('step-3-form');
+  if (step3Form) {
+    // Update title and subtitle
+    step3Form.querySelector('h2').textContent = t.step3Title;
+    step3Form.querySelector('h3').textContent = t.step3Subtitle;
+    
+    // Update accordion titles
+    const accordionButtons = step3Form.querySelectorAll('.accordion-item button');
+    accordionButtons[0].querySelector('span').textContent = t.creditCheck;
+    accordionButtons[1].querySelector('span').textContent = t.educationVerification;
+    accordionButtons[2].querySelector('span').textContent = t.employmentVerification;
+    accordionButtons[3].querySelector('span').textContent = t.employmentReference;
+    
+    // Update form field labels and placeholders
+    const sinLabel = step3Form.querySelector('label[for="socialInsuranceNumber"]');
+    if (sinLabel) sinLabel.textContent = t.sinLabel;
+    const sinInput = step3Form.querySelector('#socialInsuranceNumber');
+    if (sinInput) sinInput.placeholder = t.sinPlaceholder;
+    
+    // Education verification section
+    const eduSection = step3Form.querySelector('#accordion-content-2');
+    if (eduSection) {
+      eduSection.querySelector('label[for="institutionType"]').textContent = t.institutionTypeLabel;
+      eduSection.querySelector('label[for="educationInstitution"]').textContent = t.educationInstitutionLabel;
+      eduSection.querySelector('#name').placeholder = t.educationInstitutionLabel;
+      eduSection.querySelector('label[for="location"]').textContent = t.locationLabel;
+      eduSection.querySelector('#location').placeholder = t.locationLabel;
+      eduSection.querySelector('label[for="telephoneNumber"]').textContent = t.telephoneLabel;
+      eduSection.querySelector('#telephoneNumber').placeholder = t.telephoneLabel;
+      eduSection.querySelector('label[for="studentNumber"]').textContent = t.studentNumberLabel;
+      eduSection.querySelector('#studentNumber').placeholder = t.studentNumberLabel;
+      eduSection.querySelector('label[for="credential"]').textContent = t.credentialLabel;
+      eduSection.querySelector('#credential').placeholder = t.credentialLabel;
+      eduSection.querySelector('label[for="credentialstatus"]').textContent = t.credentialStatusLabel;
+      eduSection.querySelector('label[for="fromDate20"]').textContent = t.fromLabel;
+      eduSection.querySelector('label[for="toDate20"]').textContent = t.toLabel;
+    }
+    
+    // Employment reference section
+    const refSection = step3Form.querySelector('#accordion-content-4');
+    if (refSection) {
+      refSection.querySelector('h6:nth-of-type(1)').textContent = t.referenceWarning1;
+      refSection.querySelector('h6:nth-of-type(2)').textContent = t.referenceWarning2;
+      refSection.querySelector('label[for="Country100-4"]').textContent = t.countryLabel;
+      refSection.querySelector('label[for="name100-4"]').textContent = t.streetNameLabel;
+      refSection.querySelector('#name100-4').placeholder = t.streetNameLabel;
+      refSection.querySelector('label[for="Apartment100-4"]').textContent = t.apartmentLabel;
+      refSection.querySelector('#Apartment100-4').placeholder = t.apartmentLabel;
+      refSection.querySelector('label[for="City100-4"]').textContent = t.cityLabel;
+      refSection.querySelector('#City100-4').placeholder = t.cityLabel;
+      refSection.querySelector('label[for="Province100-4"]').textContent = t.provinceLabel;
+      refSection.querySelector('#Province100-4').placeholder = t.provinceLabel;
+      refSection.querySelector('label[for="Postal100-4"]').textContent = t.postalLabel;
+      refSection.querySelector('#Postal100-4').placeholder = t.postalLabel;
+      refSection.querySelector('label[for="Street100-4"]').textContent = t.streetNumberLabel;
+      refSection.querySelector('#Street100-4').placeholder = t.streetNumberLabel;
+      refSection.querySelector('label[for="fromDate3"]').textContent = t.fromLabel;
+      refSection.querySelector('label[for="toDate3"]').textContent = t.toLabel;
+    }
+  }
+  
+  // Update navigation buttons
+  const backButtons = document.querySelectorAll('.back');
+  backButtons.forEach(button => {
+    button.textContent = t.backButton;
+  });
+  
+  const nextButtons = document.querySelectorAll('.next-button');
+  nextButtons.forEach(button => {
+    button.textContent = t.nextButton;
+  });
+     // Update all text elements
+     document.getElementById('dect').textContent = t.declarationTitle;
+  document.querySelector('label[for="option1"]').textContent = t.noCriminalHistory;
+  document.querySelector('label[for="option2"]').textContent = t.declareCriminalHistory;
+  document.getElementById('criminal-history').innerHTML = t.declarationInfo;
+
+  const criminalHistoryDetails = document.getElementById('criminal-history-details');
+  if (criminalHistoryDetails) {
+    criminalHistoryDetails.querySelector('h3').textContent = t.criminalRecordTitle;
+    criminalHistoryDetails.querySelector('p').innerHTML = t.criminalRecordInfo;
+    criminalHistoryDetails.querySelector('input[placeholder="Offence"]').placeholder = t.offencePlaceholder;
+    criminalHistoryDetails.querySelector('input[placeholder="Court Location"]').placeholder = t.courtLocationPlaceholder;
+    criminalHistoryDetails.querySelector('button[onclick="removeRow(this)"]').textContent = t.deleteButton;
+    criminalHistoryDetails.querySelector('button[onclick="addRow()"]').textContent = t.addRowButton;
+  }
+
+  document.querySelector('button[onclick="goToStep(1)"]').textContent = t.backButton;
+  document.getElementById('next-1').textContent = t.nextButton;
     document.getElementById('modalTitle').textContent = t.modalTitle;
     document.getElementById('general-error-message').textContent = t.generalErrorMessage;
     
@@ -3099,6 +3377,7 @@ function applyLanguage(lang) {
     }
     
     // Error messages
+    
     document.getElementById('dateRangeError').textContent = t.errors.dateRange;
     // Update error messages
     document.getElementById('biogr').textContent = t.biogr;
