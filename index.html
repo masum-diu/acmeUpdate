@@ -71,6 +71,17 @@
         <div class="form-step active" id="step1">
           <!-- <h3 class="text-xl font-semibold mb-4">Step 1: Branding</h3> -->
 
+          <h4 class="text-lg font-semibold mb-3">Select a Language</h4>
+          <!-- <div id="colorPicker" class="mb-4"></div> -->
+          <div class="flex justify-start mb-3">
+            <select
+              id="language-selector"
+              class="px-4 py-2 w-48 bg-white border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="en">English</option>
+              <option value="fr">Franch</option>
+            </select>
+          </div>
           <h4 class="text-lg font-semibold mb-3">Select a Colour</h4>
           <div id="colorPicker" class="mb-4"></div>
           <input type="hidden" id="selectedColor" name="color" required />
@@ -613,7 +624,12 @@
 
       document.addEventListener("DOMContentLoaded", function () {
         const form = document.getElementById("applicantForm");
-
+        document
+          .getElementById("language-selector")
+          .addEventListener("change", (event) => {
+            const selectedLanguage = event.target.value;
+            console.log(selectedLanguage);
+          });
         // Clear error when user starts typing
         const requiredFields = form.querySelectorAll("[required]");
         requiredFields.forEach((field) => {
@@ -663,6 +679,7 @@
             preferences: {
               color: document.getElementById("selectedColor").value,
               logo: uploadedLogo,
+              language: document.getElementById("language-selector").value,
             },
           };
 

@@ -87,7 +87,7 @@
       <nav class="bg-gray-200 shadow-sm w-full flex-row space-x-2">
         <img id="navLogo" class="w-28 my-1 p-1" src="https://i.imghippo.com/files/d1912QA.png" alt="25x25 Image" />
         <div>
-          <h4 class="font-bold">ZAMAN, Mobin Mixed</h4>
+          <h4 class="font-bold" id="nameElement">ZAMAN, Mobin Mixed</h4>
           <p>2007/01/01</p>
         </div>
       </nav>
@@ -183,7 +183,7 @@
         ></div> -->
       </div>
       <div id="step-1" class="step">
-        <h2 class="text-2xl font-bold mb-6">Biographic Details</h2>
+        <h2 class="text-2xl font-bold mb-6" id="biogr">Biographic Details</h2>
 
         <!-- Error message container -->
         <div id="error-message" class="text-red-600 mb-4 hidden">
@@ -2964,6 +2964,194 @@ else{
             console.error('Error processing applicant data:', error);
           }
         });
+
+          // On page load, apply saved language
+    document.addEventListener('DOMContentLoaded', () => {
+      const storedData = localStorage.getItem('applicantFormData');
+      const formData = JSON.parse(storedData);
+      const savedLanguage = formData?.preferences?.language || 'en'; // Default to English if not set
+        applyLanguage(savedLanguage);
+    });
+    // Function to apply language
+function applyLanguage(lang) {
+  const translations = {
+    fr: {
+      // Error Messages
+      generalError: "Veuillez corriger les champs surlignés en erreur.",
+      telephoneError: "* Le téléphone doit contenir 10 chiffres.",
+      sexError: "* Veuillez sélectionner le sexe du demandeur",
+      surnameError: "* Veuillez entrer votre nom de famille.",
+      firstNameError: "* Veuillez entrer votre prénom.",
+      placeofbirthError: "* Veuillez entrer votre lieu de naissance.",
+      emailError: "* Veuillez entrer votre adresse e-mail.",
+      surnameatbirthError: "* Veuillez entrer votre nom de famille à la naissance.",
+      dobError: "* Veuillez entrer votre date de naissance.",
+      formerNameError: "* Veuillez entrer votre ancien(s) nom(s).",
+      middleNameError: "* Veuillez entrer votre deuxième prénom.",
+      
+      // Labels
+      surnameLabel: "Nom de famille :",
+      firstNameLabel: "Prénom :",
+      middleNameLabel: "Deuxième prénom :",
+      surnameatbirthLabel: "Nom de famille à la naissance :",
+      formerNameLabel: "Ancien(s) nom(s) :",
+      placeofbirthLabel: "Lieu de naissance :",
+      dobLabel: "Date de naissance :",
+      sexLabel: "Sexe :",
+      telephoneLabel: "Téléphone :",
+      emailLabel: "Adresse e-mail :",
+      
+      // Placeholders
+      surnamePlaceholder: "Nom de famille",
+      firstNamePlaceholder: "Prénom",
+      middleNamePlaceholder: "Deuxième prénom",
+      surnameatbirthPlaceholder: "Nom de naissance",
+      formerNamePlaceholder: "Ancien nom",
+      placeofbirthPlaceholder: "Lieu de naissance",
+      telephonePlaceholder: "0123456789",
+      emailPlaceholder: "adresse@email.com",
+      
+      // Buttons
+      addAddress: "Ajouter une adresse",
+      addressHistory: "Adresses des 5 dernières années",
+      nextButton: "Suivant",
+      nameElement:'ZAMAN, Mobin Mixte',
+      biogr:'Détails biographiques',
+      modalTitle: "Ajouter l'adresse du domicile",
+        generalErrorMessage: "Veuillez corriger les champs en erreur.",
+        labels: {
+            country: "Pays :",
+            otherCountry: "Autre pays :",
+            streetNumber: "Numéro de rue :",
+            streetName: "Nom de rue :",
+            apartment: "Appartement :",
+            city: "Ville :",
+            province: "Province :",
+            postalCode: "Code postal :",
+            fromDate: "De :",
+            toDate: "À :"
+        },
+        placeholders: {
+            searchAddress: "Rechercher une adresse",
+            streetNumber: "Numéro de rue",
+            streetName: "Nom de rue",
+            apartment: "Appartement",
+            city: "Ville",
+            province: "Province",
+            postalCode: "Code postal",
+            otherCountry: "Spécifiez le pays"
+        },
+        buttons: {
+            manualEntry: "Entrée manuelle",
+            cancel: "Annuler",
+            save: "Enregistrer"
+        },
+        countryOptions: {
+            canada: "Canada",
+            usa: "États-Unis",
+            other: "Autre (préciser)"
+        },
+        errors: {
+            dateRange: "La période doit couvrir au moins 5 ans."
+        }
+    }
+  }
+  if (lang === 'fr') {
+    const t = translations.fr;
+    document.getElementById('modalTitle').textContent = t.modalTitle;
+    document.getElementById('general-error-message').textContent = t.generalErrorMessage;
+    
+    // Labels
+    document.querySelector('label[for="country1"]').textContent = t.labels.country;
+    document.querySelector('label[for="otherCountry"]').textContent = t.labels.otherCountry;
+    document.querySelector('label[for="streetNumber1"]').textContent = t.labels.streetNumber;
+    document.querySelector('label[for="street1"]').textContent = t.labels.streetName;
+    document.querySelector('label[for="apartment1"]').textContent = t.labels.apartment;
+    document.querySelector('label[for="city1"]').textContent = t.labels.city;
+    document.querySelector('label[for="province1"]').textContent = t.labels.province;
+    document.querySelector('label[for="postal1"]').textContent = t.labels.postalCode;
+    document.querySelector('label[for="fromDate1"]').textContent = t.labels.fromDate;
+    document.querySelector('label[for="toDate1"]').textContent = t.labels.toDate;
+    
+    // Placeholders
+    document.querySelector('mapbox-search-box').setAttribute('placeholder', t.placeholders.searchAddress);
+    document.getElementById('streetNumber1').placeholder = t.placeholders.streetNumber;
+    document.getElementById('street1').placeholder = t.placeholders.streetName;
+    document.getElementById('apartment1').placeholder = t.placeholders.apartment;
+    document.getElementById('city1').placeholder = t.placeholders.city;
+    document.getElementById('province1').placeholder = t.placeholders.province;
+    document.getElementById('postal1').placeholder = t.placeholders.postalCode;
+    document.getElementById('otherCountry').placeholder = t.placeholders.otherCountry;
+    
+    // Buttons
+    document.getElementById('toggleManualInput').textContent = t.buttons.manualEntry;
+    document.getElementById('cancelButton').textContent = t.buttons.cancel;
+    document.getElementById('saveButton').textContent = t.buttons.save;
+    
+    // Country dropdown options
+    const countrySelect = document.getElementById('country1');
+    if (countrySelect) {
+        countrySelect.innerHTML = `
+            <option value="Canada">${t.countryOptions.canada}</option>
+            <option value="United States">${t.countryOptions.usa}</option>
+            <option value="other">${t.countryOptions.other}</option>
+        `;
+    }
+    
+    // Error messages
+    document.getElementById('dateRangeError').textContent = t.errors.dateRange;
+    // Update error messages
+    document.getElementById('biogr').textContent = t.biogr;
+    document.getElementById('nameElement').textContent = t.nameElement;
+    document.getElementById('general-error-message').textContent = t.generalError;
+    document.getElementById('telephone-error-message').textContent = t.telephoneError;
+    document.getElementById('sex-error-message').textContent = t.sexError;
+    document.getElementById('surname-error-message').textContent = t.surnameError;
+    document.getElementById('firstName-error-message').textContent = t.firstNameError;
+    document.getElementById('placeofbirth-error-message').textContent = t.placeofbirthError;
+    document.getElementById('emailaddress-error-message').textContent = t.emailError;
+    document.getElementById('surnameatbirth-error-message').textContent = t.surnameatbirthError;
+    document.getElementById('dob-error-message').textContent = t.dobError;
+    document.getElementById('formername-error-message').textContent = t.formerNameError;
+    document.getElementById('middlename-error-message').textContent = t.middleNameError;
+    
+    // Update form labels
+    document.querySelector('label[for="surname"]').textContent = t.surnameLabel;
+    document.querySelector('label[for="firstName"]').textContent = t.firstNameLabel;
+    document.querySelector('label[for="middlename"]').textContent = t.middleNameLabel;
+    document.querySelector('label[for="surnameatbirth"]').textContent = t.surnameatbirthLabel;
+    document.querySelector('label[for="formername"]').textContent = t.formerNameLabel;
+    document.querySelector('label[for="placeofbirth"]').textContent = t.placeofbirthLabel;
+    document.querySelector('label[for="dob"]').textContent = t.dobLabel;
+    document.querySelector('label[for="sex"]').textContent = t.sexLabel;
+    document.querySelector('label[for="telephone"]').textContent = t.telephoneLabel;
+    document.querySelector('label[for="emailaddress"]').textContent = t.emailLabel;
+    
+    // Update placeholders
+    document.getElementById('surname').placeholder = t.surnamePlaceholder;
+    document.getElementById('firstName').placeholder = t.firstNamePlaceholder;
+    document.getElementById('middlename').placeholder = t.middleNamePlaceholder;
+    document.getElementById('surnameatbirth').placeholder = t.surnameatbirthPlaceholder;
+    document.getElementById('formername').placeholder = t.formerNamePlaceholder;
+    document.getElementById('placeofbirth').placeholder = t.placeofbirthPlaceholder;
+    document.getElementById('telephone').placeholder = t.telephonePlaceholder;
+    document.getElementById('emailaddress').placeholder = t.emailPlaceholder;
+   
+    // Update buttons
+    document.getElementById('addbutton').textContent = t.addAddress;
+    document.getElementById('addressChange').textContent = t.addressHistory;
+    document.getElementById('nextButton').textContent = t.nextButton;
+    
+    // Update sex dropdown options
+    const sexSelect = document.getElementById('sex');
+    sexSelect.innerHTML = `
+      <option value="" disabled selected>Sélectionnez</option>
+      <option value="male">Masculin</option>
+      <option value="female">Féminin</option>
+      <option value="other">Non spécifié</option>
+    `;
+  }
+}
       </script>
   </body>
 </html>
